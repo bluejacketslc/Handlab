@@ -1,0 +1,1 @@
+logoff,clear all drive,web uploader,assignment procedure,lock usb
