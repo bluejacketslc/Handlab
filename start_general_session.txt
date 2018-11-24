@@ -1,1 +1,1 @@
-log off, clear all drive, web uploader, practicum procedure
+clear all drive, web uploader, practicum procedure

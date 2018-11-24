@@ -36,8 +36,7 @@ def handle_ruman():
             btnComp = browser.find_element_by_css_selector(".computer")
             actionChains.move_to_element(btnComp).context_click().perform()
             browser.find_element_by_css_selector(".context-menu-search input").send_keys(act, Keys.DOWN, Keys.ENTER, Keys.ENTER);
-            if act == "log off":
-                time.sleep(7)
+            time.sleep(7)
         
     except Exception as e:
         pass
@@ -126,7 +125,7 @@ if __name__ == '__main__':
             pick = raw_input("Anything? ")
             f = open(templates[int(pick)] + '.txt', 'r')
             action_sets = [x.strip() for x in f.read().split(',')]
-            if templates[int(pick)].split('_')[0] == 'start':
+            if templates[int(pick) - 1].split('_')[0] == 'start':
                 _sessStart = True
             break
         elif choose == "2":
