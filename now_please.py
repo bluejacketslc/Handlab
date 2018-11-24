@@ -66,25 +66,28 @@ def handle_messier():
 
         browser.get('http://messier.slc/Home.aspx#P=Active%20Job')
 
-        wait = WebDriverWait(browser, 25)
+        wait = WebDriverWait(browser, 30)
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'rowHover')))
 
         task = browser.find_element_by_class_name('Deadline')
         task.click()
 
-        # actionChains.key_down(Keys.CONTROL).key_down(Keys.LEFT_SHIFT).send_keys('j').key_up(Keys.CONTROL).key_up(Keys.LEFT_SHIFT).perform()
         wait = WebDriverWait(browser, 20)
-        wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#view_mode_grid')))
-
+        wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, '#loadmsg')))
+        # browser.execute_script("document.getElementById('ActiveTeaching_grid_view').style['display'] = 'block';")
         browser.find_element_by_id('view_mode_grid').click()
+        browser.find_element_by_id('view_mode_grid').send_keys(Keys.END)
+
+        autoRefresh = browser.find_element_by_id('Auto_Refresh')
+        autoRefresh.click()
 
         return True
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3 or sys.argv[1] != '-sq':
-        print "Usage: python2 {} -sq [start|end]_[general|quiz|final]_session.txt [--wakeup]".format(sys.argv[0])
-        exit()
-    if sys.argv[1] == '-sq':
+    if len(sys.argv) > 1 and sys.argv[1] == '-sq':
+        if len(sys.argv) < 3:
+            print "Usage: python2 {} -sq [start|end]_[general|quiz|final]_session.txt [--wakeup]".format(sys.argv[0])
+            exit()
         try:
             f = open(sys.argv[2], 'r')
             action_sets = [x.strip() for x in f.read().split(',')]
@@ -104,14 +107,39 @@ if __name__ == '__main__':
     password = getpass3.getpass("Password for Messier: ")
     ruman_password = getpass3.getpass("Password for Ruman.slc: ")
 
+    os.system("cls")
+
+    templates = []
+    
+    while True:
+        choose = raw_input("Choose (1) a template or (2) write your own Ruman sequence(s)? [1..2]:")
+        if choose == "1":
+            i = 1
+            for file in os.listdir(os.getcwd()):
+                if file.endswith(".txt"):
+                    templates.append(file.split('.')[0])
+                    print "{}. {}".format(i, file)
+                    i = i + 1
+            pick = raw_input("Anything? ")
+            f = open(templates[int(pick)] + '.txt', 'r')
+            action_sets = [x.strip() for x in f.read().split(',')]
+            break
+        elif choose == "2":
+            sequences = raw_input("Input Ruman sequence(s) (separated with comma (,): ")
+            action_sets = [x.strip() for x in sequences.split(',')]
+            break
+
+    print templates
+    raw_input()
+
     browser = webdriver.Chrome("chromedriver_win32/chromedriver.exe")
     browser.fullscreen_window()
     actionChains = ActionChains(browser)
 
-    # if not handle_ruman() or not handle_messier():
-    #     browser.close()
-    #     exit()
+    if not handle_ruman() or not handle_messier():
+        browser.close()
+        exit()
 
-    handle_messier()
+    # handle_messier()
     
     print "Done. Happy Teaching!"
