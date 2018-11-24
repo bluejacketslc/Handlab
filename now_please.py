@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 import getpass3, sys, socket, os, re
+import time
 
 # boolean to indicate the beginning or the end of the class
 _sessStart = False 
@@ -35,6 +36,8 @@ def handle_ruman():
             btnComp = browser.find_element_by_css_selector(".computer")
             actionChains.move_to_element(btnComp).context_click().perform()
             browser.find_element_by_css_selector(".context-menu-search input").send_keys(act, Keys.DOWN, Keys.ENTER, Keys.ENTER);
+            if act == "log off":
+                time.sleep(7)
         
     except Exception as e:
         pass
@@ -123,14 +126,13 @@ if __name__ == '__main__':
             pick = raw_input("Anything? ")
             f = open(templates[int(pick)] + '.txt', 'r')
             action_sets = [x.strip() for x in f.read().split(',')]
+            if templates[int(pick)].split('_')[0] == 'start':
+                _sessStart = True
             break
         elif choose == "2":
             sequences = raw_input("Input Ruman sequence(s) (separated with comma (,): ")
             action_sets = [x.strip() for x in sequences.split(',')]
             break
-
-    print templates
-    raw_input()
 
     browser = webdriver.Chrome("chromedriver_win32/chromedriver.exe")
     browser.fullscreen_window()
@@ -139,6 +141,12 @@ if __name__ == '__main__':
     if not handle_ruman() or not handle_messier():
         browser.close()
         exit()
+
+    if not _sessStart:
+        log_off = raw_input("Log off this computer? [y|n]:")
+        if log_off == "y":
+            os.system("shutdown /l /f")
+
 
     # handle_messier()
     
