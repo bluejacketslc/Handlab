@@ -123,7 +123,7 @@ if __name__ == '__main__':
                     print "{}. {}".format(i, file)
                     i = i + 1
             pick = raw_input("Anything? ")
-            f = open(templates[int(pick)] + '.txt', 'r')
+            f = open(templates[int(pick) - 1] + '.txt', 'r')
             action_sets = [x.strip() for x in f.read().split(',')]
             if templates[int(pick) - 1].split('_')[0] == 'start':
                 _sessStart = True
