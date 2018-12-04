@@ -150,3 +150,9 @@ if __name__ == '__main__':
     # handle_messier()
     
     print "Done. Happy Teaching!"
+
+'''
+From 18-1 with love <3
+Project Handlab by AO18-1
+https://github.com/chrisandoryan/Handlab
+'''
